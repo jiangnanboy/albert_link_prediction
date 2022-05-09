@@ -3,6 +3,13 @@ import argparse
 
 from link_prediction.module import LP
 
+def get_entity(file_path):
+    entities = set()
+    with open(file_path, 'r', encoding='utf-8') as f_read:
+        for line in f_read:
+            entities.add(line.strip())
+    return list(entities)
+
 if __name__ == '__main__':
     path = os.path.abspath(os.path.join(os.getcwd(), ".."))
     print("Base path : {}".format(path))
@@ -75,9 +82,9 @@ if __name__ == '__main__':
     parser.add_argument('--clip', default=5, type=float, required=False, help='Clip!')
     parser.add_argument("--weight_decay", default=0, type=float, required=False, help="Regularization coefficient!")
     parser.add_argument(
-        "--max_length", default=50, type=int, required=False, help="Maximum text length!"
+        "--max_length", default=100, type=int, required=False, help="Maximum text length!"
     )
-    parser.add_argument('--train', default='true', type=str, required=False, help='Train or predict!')
+    parser.add_argument('--train', default='false', type=str, required=False, help='Train or predict!')
     args = parser.parse_args()
     train_bool = lambda x:x.lower() == 'true'
     lp = LP(args)
@@ -85,3 +92,11 @@ if __name__ == '__main__':
         lp.train()
     else:
         lp.load()
+        entities = get_entity('../data/entities.txt')
+        predict_result = lp.predict_tail('科学', '包涵', entities)
+        predict_result = sorted(predict_result.items(), key=lambda x: x[1], reverse=True)
+        print(predict_result[:10])
+
+        predict_result = lp.predict_tail('编译器', '外文名', entities)
+        predict_result = sorted(predict_result.items(), key=lambda x: x[1], reverse=True)
+        print(predict_result[:10])
