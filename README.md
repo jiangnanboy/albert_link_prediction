@@ -36,9 +36,16 @@
     lp = LP(args)
     if train_bool(args.train):
         lp.train()
-       
     else:
         lp.load()
+        entities = get_entity('../data/entities.txt')
+        predict_result = lp.predict_tail('科学', '包涵', entities)
+        predict_result = sorted(predict_result.items(), key=lambda x: x[1], reverse=True)
+        print(predict_result[:10])
+
+        predict_result = lp.predict_tail('编译器', '外文名', entities)
+        predict_result = sorted(predict_result.items(), key=lambda x: x[1], reverse=True)
+        print(predict_result[:10])
 ```
 
 ## 项目结构

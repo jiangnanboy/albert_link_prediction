@@ -99,6 +99,7 @@ class LP():
         self.model.eval()
 
         tail_list = []
+        predict_result = {}
         for tail in entity_list:
             tmp_triple = [head, rel, tail, 1]
             if tmp_triple not in tail_list:
@@ -118,16 +119,9 @@ class LP():
                 single_segment_ids = single_segment_ids.to(DEVICE)
 
                 with torch.no_grad():
-                    out = self.model(input_idx=single_input_ids, attention_mask=single_input_mask, token_type_ids=single_segment_ids)
-                    print('predict tail : {}, preds : {}'.format(tail, out.cpu().data))
-
-            # vec_predict = self.model(input_idx=input_ids, attention_mask=attention_mask, entity_mask=entity_mask)[0]
-            # soft_predict = torch.softmax(vec_predict, dim=0)
-            # predict_prob, predict_index = torch.max(soft_predict.cpu().data, dim=0)
-            # i2label = {value: key for key, value in self.label2i.items()}
-            # predict_class = i2label[predict_index]
-            # predict_prob = predict_prob.item()
-            # return predict_prob, predict_class
+                    out = self.model(input_idx=single_input_ids, attention_mask=single_input_mask, token_type_ids=single_segment_ids)[0]
+                    predict_result[tail] = out[1].item()
+        return predict_result
 
     def load(self):
         self.tokenizer = load_tokenizer(self.args.pretrained_model_path, self.SPECIAL_TOKEN)
