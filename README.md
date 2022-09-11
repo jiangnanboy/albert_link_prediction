@@ -36,9 +36,16 @@
     lp = LP(args)
     if train_bool(args.train):
         lp.train()
-       
     else:
         lp.load()
+        entities = get_entity('../data/entities.txt')
+        predict_result = lp.predict_tail('科学', '包涵', entities)
+        predict_result = sorted(predict_result.items(), key=lambda x: x[1], reverse=True)
+        print(predict_result[:10])
+
+        predict_result = lp.predict_tail('编译器', '外文名', entities)
+        predict_result = sorted(predict_result.items(), key=lambda x: x[1], reverse=True)
+        print(predict_result[:10])
 ```
 
 ## 项目结构
@@ -62,3 +69,13 @@
 ## 参考
 - [transformers](https://github.com/huggingface/transformers)
 - [KG-BERT: BERT for Knowledge Graph Completion](https://arxiv.org/pdf/1909.03193.pdf)
+
+## contact
+
+如有搜索、推荐、nlp以及大数据挖掘等问题或合作，可联系我：
+
+1、我的github项目介绍：https://github.com/jiangnanboy
+
+2、我的博客园技术博客：https://www.cnblogs.com/little-horse/
+
+3、我的QQ号:2229029156
